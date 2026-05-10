@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Калькулятор IIM - Качество Молозива</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 20px;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            color: #667eea;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .slider-group {
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .slider-group:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+        }
+
+        .slider-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .slider-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .slider-value {
+            font-size: 20px;
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: 8px;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .slider-value.brix {
+            background: #3498db;
+            color: white;
+        }
+
+        .slider-value.protein {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .slider-value.density {
+            background: #9b59b6;
+            color: white;
+        }
+
+        .slider-score {
+            font-size: 13px;
+            color: #666;
+            margin-top: 5px;
+            text-align: right;
+            font-weight: 600;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 12px;
+            border-radius: 6px;
+            outline: none;
+            margin: 10px 0;
+            transition: all 0.2s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+            border: 4px solid #667eea;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            transition: all 0.2s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: white;
+            cursor: pointer;
+            border: 4px solid #667eea;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        #brixSlider {
+            background: linear-gradient(to right, #8B0000 0%, #DC143C 20%, #FFA500 50%, #4CAF50 80%, #2E8B57 100%);
+        }
+
+        #proteinSlider {
+            background: linear-gradient(to right, #8B0000 0%, #DC143C 25%, #FFA500 50%, #4CAF50 75%, #2E8B57 100%);
+        }
+
+        #densitySlider {
+            background: linear-gradient(to right, #8B0000 0%, #DC143C 30%, #FFA500 50%, #4CAF50 70%, #2E8B57 100%);
+        }
+
+        .result-box {
+            margin-top: 30px;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.4s ease;
+            border: 3px solid #ddd;
+        }
+
+        .result-score {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .result-category {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .result-description {
+            font-size: 14px;
+            line-height: 1.5;
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(255,255,255,0.5);
+            border-radius: 8px;
+        }
+
+        .result-excellent {
+            background: linear-gradient(135deg, #2E8B57 0%, #3CB371 100%);
+            color: white;
+            border-color: #2E8B57;
+            animation: pulse 1s ease-in-out;
+        }
+
+        .result-good {
+            background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
+            color: white;
+            border-color: #4CAF50;
+        }
+
+        .result-medium {
+            background: linear-gradient(135deg, #FFA500 0%, #FFB84D 100%);
+            color: white;
+            border-color: #FFA500;
+        }
+
+        .result-low {
+            background: linear-gradient(135deg, #DC143C 0%, #FF6B6B 100%);
+            color: white;
+            border-color: #DC143C;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .breakdown {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 2px dashed rgba(0,0,0,0.1);
+        }
+
+        .breakdown-item {
+            text-align: center;
+        }
+
+        .breakdown-label {
+            font-size: 11px;
+            color: rgba(0,0,0,0.6);
+            margin-bottom: 3px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .breakdown-value {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            flex: 1;
+            padding: 15px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-reset {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .btn-reset:hover {
+            background: #7f8c8d;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-save {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-save:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .history {
+            margin-top: 25px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .history.active {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .history-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #667eea;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .history-item {
+            padding: 10px;
+            margin-bottom: 8px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            font-size: 13px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .recommendations {
+            margin-top: 20px;
+            padding: 15px;
+            background: #fff3cd;
+            border-radius: 12px;
+            border: 2px solid #ffc107;
+        }
+
+        .recommendations-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #856404;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .recommendations-text {
+            font-size: 13px;
+            color: #856404;
+            line-height: 1.5;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 2px solid #e9ecef;
+            font-size: 12px;
+            color: #666;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 20px;
+            }
+            
+            .result-score {
+                font-size: 40px;
+            }
+            
+            .result-category {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🐄 Калькулятор IIM</h1>
+            <p>Оценка качества молозива</p>
+            <p id="jsStatus" style="margin-top:8px;font-size:12px;color:#dc3545;font-weight:700;">JavaScript не запущен</p>
+        </div>
+
+        <!-- Brix Slider -->
+        <div class="slider-group">
+            <div class="slider-label">
+                <span class="slider-name">Brix (%)</span>
+                <span class="slider-value brix" id="brixValue">22</span>
+            </div>
+            <input type="range" id="brixSlider" min="16" max="30" value="22" step="0.5">
+            <div class="slider-score">Баллы: <span id="brixScore">40</span> / 60</div>
+        </div>
+
+        <!-- Protein Slider -->
+        <div class="slider-group">
+            <div class="slider-label">
+                <span class="slider-name">Белок (г/дл)</span>
+                <span class="slider-value protein" id="proteinValue">6.0</span>
+            </div>
+            <input type="range" id="proteinSlider" min="3.5" max="9.0" value="6.0" step="0.1">
+            <div class="slider-score">Баллы: <span id="proteinScore">20</span> / 25</div>
+        </div>
+
+        <!-- Density Slider -->
+        <div class="slider-group">
+            <div class="slider-label">
+                <span class="slider-name">Плотность</span>
+                <span class="slider-value density" id="densityValue">60</span>
+            </div>
+            <input type="range" id="densitySlider" min="30" max="85" value="60" step="1">
+            <div class="slider-score">Баллы: <span id="densityScore">7</span> / 10</div>
+        </div>
+
+        <!-- Result -->
+        <div class="result-box" id="resultBox">
+            <div class="result-score" id="totalScore">67</div>
+            <div class="result-category" id="category">ХОРОШЕЕ</div>
+            <div class="result-description" id="description">
+                Молозиво хорошего качества. Подходит для кормления телят.
+            </div>
+            <div class="breakdown">
+                <div class="breakdown-item">
+                    <div class="breakdown-label">Brix</div>
+                    <div class="breakdown-value" id="brixBreakdown">40б</div>
+                </div>
+                <div class="breakdown-item">
+                    <div class="breakdown-label">Белок</div>
+                    <div class="breakdown-value" id="proteinBreakdown">20б</div>
+                </div>
+                <div class="breakdown-item">
+                    <div class="breakdown-label">Плотн.</div>
+                    <div class="breakdown-value" id="densityBreakdown">7б</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recommendations -->
+        <div class="recommendations" id="recommendations">
+            <div class="recommendations-title">
+                💡 Рекомендация
+            </div>
+            <div class="recommendations-text" id="recommendationText">
+                Используйте в первые 12 часов жизни телёнка.
+            </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="buttons">
+            <button class="btn-reset" onclick="resetValues()">Сбросить</button>
+            <button class="btn-save" onclick="saveToHistory()">Сохранить</button>
+        </div>
+
+        <!-- History -->
+        <div class="history" id="history">
+            <div class="history-title" onclick="toggleHistory()">
+                История измерений <span id="historyToggle">▼</span>
+            </div>
+            <div id="historyList"></div>
+        </div>
+
+        <div class="footer">
+            © 2024 Калькулятор IIM | Версия 1.0
+        </div>
+    </div>
+
+    <script>
+        // Получение элементов
+        const brixSlider = document.getElementById('brixSlider');
+        const proteinSlider = document.getElementById('proteinSlider');
+        const densitySlider = document.getElementById('densitySlider');
+
+        const brixValue = document.getElementById('brixValue');
+        const proteinValue = document.getElementById('proteinValue');
+        const densityValue = document.getElementById('densityValue');
+
+        const brixScore = document.getElementById('brixScore');
+        const proteinScore = document.getElementById('proteinScore');
+        const densityScore = document.getElementById('densityScore');
+
+        const totalScore = document.getElementById('totalScore');
+        const category = document.getElementById('category');
+        const description = document.getElementById('description');
+        const resultBox = document.getElementById('resultBox');
+
+        const brixBreakdown = document.getElementById('brixBreakdown');
+        const proteinBreakdown = document.getElementById('proteinBreakdown');
+        const densityBreakdown = document.getElementById('densityBreakdown');
+
+        const recommendationText = document.getElementById('recommendationText');
+
+        let historyData = [];
+
+        // Функции расчёта баллов
+        function calculateBrixScore(brix) {
+            if (brix >= 26) return 60;
+            if (brix >= 24) return 50;
+            if (brix >= 22) return 40;
+            if (brix >= 20) return 25;
+            if (brix >= 18) return 10;
+            return 0;
+        }
+
+        function calculateProteinScore(protein) {
+            if (protein >= 7.0) return 25;
+            if (protein >= 6.0) return 20 + Math.floor((protein - 6.0) * 5);
+            if (protein >= 5.0) return 15 + Math.floor((protein - 5.0) * 5);
+            if (protein >= 4.0) return 10 + Math.floor((protein - 4.0) * 5);
+            return 0;
+        }
+
+        function calculateDensityScore(density) {
+            if (density >= 70) return 10;
+            if (density >= 66) return 9;
+            if (density >= 62) return 8;
+            if (density >= 58) return 7;
+            if (density >= 54) return 6;
+            if (density >= 50) return 5;
+            if (density >= 46) return 4;
+            if (density >= 42) return 3;
+            if (density >= 38) return 2;
+            if (density >= 34) return 1;
+            return 0;
+        }
+
+        function getCategoryInfo(total) {
+            if (total >= 80) {
+                return {
+                    name: 'ОТЛИЧНОЕ',
+                    class: 'result-excellent',
+                    desc: 'Молозиво высшего качества! Идеально для телят.',
+                    recommendation: 'Используйте в первые 6 часов жизни телёнка. Высокая концентрация иммуноглобулинов обеспечит отличный пассивный иммунитет.'
+                };
+            } else if (total >= 60) {
+                return {
+                    name: 'ХОРОШЕЕ',
+                    class: 'result-good',
+                    desc: 'Молозиво хорошего качества. Подходит для кормления телят.',
+                    recommendation: 'Используйте в первые 12 часов жизни телёнка. Обеспечит хороший иммунный ответ.'
+                };
+            } else if (total >= 40) {
+                return {
+                    name: 'СРЕДНЕЕ',
+                    class: 'result-medium',
+                    desc: 'Молозиво среднего качества. Можно использовать с ограничениями.',
+                    recommendation: 'Рекомендуется смешать с молозивом отличного качества. Увеличьте объём скармливания на 20-30%.'
+                };
+            } else {
+                return {
+                    name: 'НИЗКОЕ',
+                    class: 'result-low',
+                    desc: 'Качество недостаточное для надёжной защиты телёнка.',
+                    recommendation: '⚠️ НЕ рекомендуется использовать для телят. Найдите молозиво лучшего качества или используйте заменитель молозива.'
+                };
+            }
+        }
+
+        function updateCalculation() {
+            const brix = parseFloat(brixSlider.value);
+            const protein = parseFloat(proteinSlider.value);
+            const density = parseFloat(densitySlider.value);
+
+            // Обновление отображаемых значений
+            brixValue.textContent = brix.toFixed(1);
+            proteinValue.textContent = protein.toFixed(1);
+            densityValue.textContent = density;
+
+            // Расчёт баллов
+            const brixPts = calculateBrixScore(brix);
+            const proteinPts = calculateProteinScore(protein);
+            const densityPts = calculateDensityScore(density);
+            const total = brixPts + proteinPts + densityPts;
+
+            // Обновление баллов
+            brixScore.textContent = brixPts;
+            proteinScore.textContent = proteinPts;
+            densityScore.textContent = densityPts;
+
+            brixBreakdown.textContent = brixPts + 'б';
+            proteinBreakdown.textContent = proteinPts + 'б';
+            densityBreakdown.textContent = densityPts + 'б';
+
+            // Обновление итога
+            totalScore.textContent = total;
+
+            // Получение категории
+            const info = getCategoryInfo(total);
+            category.textContent = info.name;
+            description.textContent = info.desc;
+            recommendationText.textContent = info.recommendation;
+
+            // Обновление класса
+            resultBox.className = 'result-box ' + info.class;
+        }
+
+        function resetValues() {
+            brixSlider.value = 22;
+            proteinSlider.value = 6.0;
+            densitySlider.value = 60;
+            updateCalculation();
+        }
+
+        function saveToHistory() {
+            const timestamp = new Date().toLocaleString('ru-RU');
+            const brix = parseFloat(brixSlider.value);
+            const protein = parseFloat(proteinSlider.value);
+            const density = parseFloat(densitySlider.value);
+            const total = parseInt(totalScore.textContent);
+            const cat = category.textContent;
+
+            const entry = {
+                timestamp,
+                brix,
+                protein,
+                density,
+                total,
+                category: cat
+            };
+
+            historyData.unshift(entry);
+            if (historyData.length > 10) historyData.pop();
+
+            updateHistoryDisplay();
+            
+            // Показать уведомление
+            alert('✅ Сохранено в историю!');
+        }
+
+        function updateHistoryDisplay() {
+            const historyList = document.getElementById('historyList');
+            if (historyData.length === 0) {
+                historyList.innerHTML = '<div style="text-align:center;color:#999;padding:10px;">История пуста</div>';
+                return;
+            }
+
+            historyList.innerHTML = historyData.map((entry, index) => `
+                <div class="history-item">
+                    <div>
+                        <strong>${entry.total} б - ${entry.category}</strong><br>
+                        <small>Brix: ${entry.brix}% | Белок: ${entry.protein} | Плотн: ${entry.density}</small><br>
+                        <small style="color:#999;">${entry.timestamp}</small>
+                    </div>
+                    <button onclick="deleteHistoryItem(${index})" style="background:#dc3545;color:white;border:none;padding:5px 10px;border-radius:5px;cursor:pointer;font-size:12px;">✕</button>
+                </div>
+            `).join('');
+        }
+
+        function deleteHistoryItem(index) {
+            historyData.splice(index, 1);
+            updateHistoryDisplay();
+        }
+
+        function toggleHistory() {
+            const historyDiv = document.getElementById('history');
+            const toggle = document.getElementById('historyToggle');
+            historyDiv.classList.toggle('active');
+            toggle.textContent = historyDiv.classList.contains('active') ? '▲' : '▼';
+        }
+
+        // События изменения слайдеров. Работает в Safari/iPhone после открытия через сайт.
+        [brixSlider, proteinSlider, densitySlider].forEach(function(slider) {
+            slider.addEventListener('input', updateCalculation);
+            slider.addEventListener('change', updateCalculation);
+            slider.addEventListener('touchend', function() {
+                setTimeout(updateCalculation, 50);
+            });
+        });
+
+        // Начальный расчёт
+        updateCalculation();
+
+        const jsStatus = document.getElementById('jsStatus');
+        if (jsStatus) {
+            jsStatus.textContent = 'JavaScript работает';
+            jsStatus.style.color = '#28a745';
+        }
+    </script>
+</body>
+</html>
