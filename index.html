@@ -1,690 +1,498 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Калькулятор IIM - Качество Молозива</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Молозиво">
+<meta name="theme-color" content="#0E3B2B">
+<title>Молозиво — IIM-Lite</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green-900:#0E3B2B;
+  --green-700:#166B4A;
+  --green-500:#1E9A66;
+  --gold:#F2A413;
+  --gold-soft:#FDEFD2;
+  --coral:#D9483B;
+  --coral-soft:#FBE6E3;
+  --mint:#E7F4ED;
+  --cream:#FFFBF3;
+  --ink:#12241C;
+  --ink-2:#546B60;
+  --ink-3:#8EA69A;
+  --line:#E2EEE7;
+  --white:#fff;
+  --r:20px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:Manrope,system-ui,sans-serif;color:var(--ink);line-height:1.5;
+  background:var(--mint);padding-bottom:calc(40px + env(safe-area-inset-bottom));
+}
+.app{max-width:480px;margin:0 auto;background:var(--cream);min-height:100vh;
+  box-shadow:0 0 60px rgba(14,59,43,.10)}
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 10px;
-            color: #333;
-        }
+/* ---------- header ---------- */
+.hero{
+  background:linear-gradient(155deg,#1A7A53 0%,#0E3B2B 100%);
+  padding:calc(20px + env(safe-area-inset-top)) 20px 26px;
+  color:#fff;position:relative;overflow:hidden;
+  border-radius:0 0 26px 26px;
+}
+.hero::after{
+  content:"";position:absolute;right:-50px;top:-60px;width:190px;height:190px;
+  border-radius:50%;background:rgba(242,164,19,.13);
+}
+.brand{display:flex;align-items:center;gap:12px;position:relative;z-index:1}
+.logo{width:52px;height:52px;flex:none;background:#fff;border-radius:16px;
+  display:grid;place-items:center;box-shadow:0 4px 14px rgba(0,0,0,.16)}
+.brand h1{font-size:19px;font-weight:800;letter-spacing:-.02em}
+.brand p{font-size:12.5px;color:#A9D6C0;font-weight:500;margin-top:1px}
 
-        .container {
-            max-width: 500px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            padding: 20px;
-            animation: slideIn 0.5s ease-out;
-        }
+/* ---------- tabs ---------- */
+.tabs{display:flex;gap:6px;padding:6px;margin:-16px 20px 0;position:relative;z-index:2;
+  background:#fff;border-radius:16px;box-shadow:0 6px 20px rgba(14,59,43,.10)}
+.tabs button{flex:1;font-family:inherit;font-size:14.5px;font-weight:700;padding:11px 8px;
+  border:none;background:none;color:var(--ink-3);border-radius:11px;cursor:pointer}
+.tabs button[aria-selected=true]{background:var(--green-700);color:#fff}
+.tabs button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+main{padding:20px}
+.page[hidden]{display:none}
 
-        .header {
-            text-align: center;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 3px solid #667eea;
-        }
+/* ---------- cards ---------- */
+.card{background:#fff;border-radius:var(--r);padding:18px;margin-bottom:14px;
+  box-shadow:0 2px 10px rgba(14,59,43,.05)}
+.card h2{font-size:12.5px;font-weight:700;color:var(--ink-3);
+  letter-spacing:.02em;margin-bottom:14px}
 
-        .header h1 {
-            font-size: 24px;
-            color: #667eea;
-            margin-bottom: 5px;
-            font-weight: 700;
-        }
+/* ---------- gauge ---------- */
+.gauge-card{text-align:center;padding:24px 18px 20px;
+  background:linear-gradient(170deg,#fff 0%,var(--mint) 100%)}
+.ring{position:relative;width:190px;height:190px;margin:0 auto}
+.ring svg{transform:rotate(-90deg)}
+.ring-mid{position:absolute;inset:0;display:grid;place-content:center;gap:0}
+.ring-num{font-size:56px;font-weight:800;line-height:1;letter-spacing:-.04em}
+.ring-max{font-size:13px;font-weight:600;color:var(--ink-3);margin-top:4px}
+.badge{display:inline-block;margin-top:16px;padding:8px 20px;border-radius:999px;
+  font-size:15px;font-weight:800}
+.advice{font-size:13.5px;color:var(--ink-2);margin-top:10px;font-weight:500}
 
-        .header p {
-            font-size: 14px;
-            color: #666;
-        }
+.legend{display:flex;gap:6px;margin-top:18px}
+.legend div{flex:1;padding:8px 4px;border-radius:11px;font-size:11.5px;font-weight:700}
+.lg-low{background:var(--coral-soft);color:var(--coral)}
+.lg-mid{background:var(--gold-soft);color:#9A6403}
+.lg-high{background:var(--mint);color:var(--green-700)}
+.legend b{display:block;font-size:13px}
 
-        .slider-group {
-            margin-bottom: 25px;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 15px;
-            transition: all 0.3s ease;
-        }
+/* ---------- fields ---------- */
+.f{padding:16px 0}
+.f+.f{border-top:1px solid var(--line)}
+.f-top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.f-ic{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;flex:none}
+.f-nm{font-size:15px;font-weight:700}
+.f-sub{font-size:11.5px;color:var(--ink-3);font-weight:600}
+.f-pt{margin-left:auto;font-size:13px;font-weight:800;padding:4px 10px;border-radius:999px;
+  background:var(--mint);color:var(--green-700)}
+.f-val{font-size:30px;font-weight:800;letter-spacing:-.03em;margin-bottom:6px}
+.f-val u{font-size:14px;color:var(--ink-3);text-decoration:none;font-weight:700;margin-left:3px}
 
-        .slider-group:hover {
-            background: #e9ecef;
-            transform: translateY(-2px);
-        }
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:30px;
+  background:transparent;cursor:pointer;display:block}
+input[type=range]::-webkit-slider-runnable-track{height:9px;border-radius:99px;background:var(--trk,#E7EFEA)}
+input[type=range]::-moz-range-track{height:9px;border-radius:99px;background:var(--trk,#E7EFEA)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;
+  margin-top:-9.5px;background:#fff;border:4px solid var(--thumb,var(--green-500));
+  border-radius:50%;box-shadow:0 2px 8px rgba(14,59,43,.22)}
+input[type=range]::-moz-range-thumb{width:22px;height:22px;background:#fff;
+  border:4px solid var(--thumb,var(--green-500));border-radius:50%}
+input[type=range]:focus-visible::-webkit-slider-thumb{outline:3px solid var(--gold);outline-offset:2px}
+.marks{display:flex;justify-content:space-between;font-size:11px;font-weight:700;color:var(--ink-3)}
+.marks .mk{color:var(--ink-2)}
 
-        .slider-label {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
+/* ---------- inputs ---------- */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+label.lbl{display:block;font-size:12px;font-weight:700;color:var(--ink-2);margin-bottom:6px}
+input[type=text],input[type=date]{font-family:inherit;font-size:16px;font-weight:600;width:100%;
+  padding:12px 13px;border:2px solid var(--line);border-radius:13px;background:var(--cream);color:var(--ink)}
+input[type=text]:focus,input[type=date]:focus{outline:none;border-color:var(--green-500);background:#fff}
+.err{font-size:12px;font-weight:600;color:var(--coral);margin-top:6px;display:none}
+.err.on{display:block}
+.chips{display:flex;gap:7px;margin-top:6px}
+.chips button{flex:1;font-family:inherit;font-size:14px;font-weight:700;padding:11px 4px;
+  border:2px solid var(--line);background:var(--cream);color:var(--ink-2);border-radius:13px;cursor:pointer}
+.chips button[aria-pressed=true]{background:var(--green-700);border-color:var(--green-700);color:#fff}
+.chips button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 
-        .slider-name {
-            font-size: 16px;
-            font-weight: 600;
-            color: #333;
-        }
+.note{display:flex;gap:10px;background:var(--gold-soft);border-radius:15px;
+  padding:13px 15px;margin-bottom:14px;font-size:13px;font-weight:600;color:#7A5003}
+.note.hidden{display:none}
+.note svg{flex:none;margin-top:1px}
 
-        .slider-value {
-            font-size: 20px;
-            font-weight: 700;
-            padding: 5px 12px;
-            border-radius: 8px;
-            min-width: 80px;
-            text-align: center;
-        }
+.btn{width:100%;font-family:inherit;font-size:16px;font-weight:800;padding:15px;
+  border:none;border-radius:15px;background:var(--green-700);color:#fff;cursor:pointer;
+  box-shadow:0 4px 14px rgba(22,107,74,.28)}
+.btn:active{transform:translateY(1px)}
+.btn:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.btn.ghost{background:#fff;color:var(--green-700);border:2px solid var(--line);box-shadow:none}
+.btn[disabled]{opacity:.45;cursor:not-allowed;box-shadow:none}
+.row{display:flex;gap:9px;margin-top:12px}
+.row .btn{font-size:14.5px;padding:13px}
 
-        .slider-value.brix {
-            background: #3498db;
-            color: white;
-        }
+/* ---------- journal ---------- */
+.rec{background:#fff;border-radius:17px;padding:14px 15px;margin-bottom:10px;
+  box-shadow:0 2px 10px rgba(14,59,43,.05);display:flex;align-items:center;gap:13px}
+.rec-score{width:52px;height:52px;border-radius:15px;flex:none;display:grid;place-content:center;
+  font-size:20px;font-weight:800}
+.rec-main{flex:1;min-width:0}
+.rec-cow{font-size:15.5px;font-weight:800}
+.rec-meta{font-size:12px;color:var(--ink-3);font-weight:600;margin-top:1px}
+.rec-vals{font-size:12px;color:var(--ink-2);font-weight:600;margin-top:3px}
+.rec-del{background:none;border:none;color:var(--ink-3);font-size:22px;cursor:pointer;
+  padding:4px 6px;line-height:1;flex:none}
+.rec-del:hover{color:var(--coral)}
+.empty{text-align:center;padding:36px 20px;color:var(--ink-3)}
+.empty p{font-size:14px;font-weight:600;margin-top:12px}
+.jhead{display:flex;align-items:center;margin-bottom:12px}
+.jhead h2{font-size:16px;font-weight:800;color:var(--ink)}
+.jhead span{margin-left:auto;font-size:12.5px;font-weight:700;color:var(--ink-3)}
 
-        .slider-value.protein {
-            background: #e74c3c;
-            color: white;
-        }
-
-        .slider-value.density {
-            background: #9b59b6;
-            color: white;
-        }
-
-        .slider-score {
-            font-size: 13px;
-            color: #666;
-            margin-top: 5px;
-            text-align: right;
-            font-weight: 600;
-        }
-
-        input[type="range"] {
-            -webkit-appearance: none;
-            width: 100%;
-            height: 12px;
-            border-radius: 6px;
-            outline: none;
-            margin: 10px 0;
-            transition: all 0.2s;
-        }
-
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background: white;
-            cursor: pointer;
-            border: 4px solid #667eea;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-            transition: all 0.2s;
-        }
-
-        input[type="range"]::-webkit-slider-thumb:hover {
-            transform: scale(1.2);
-        }
-
-        input[type="range"]::-moz-range-thumb {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background: white;
-            cursor: pointer;
-            border: 4px solid #667eea;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        }
-
-        #brixSlider {
-            background: linear-gradient(to right, #8B0000 0%, #DC143C 20%, #FFA500 50%, #4CAF50 80%, #2E8B57 100%);
-        }
-
-        #proteinSlider {
-            background: linear-gradient(to right, #8B0000 0%, #DC143C 25%, #FFA500 50%, #4CAF50 75%, #2E8B57 100%);
-        }
-
-        #densitySlider {
-            background: linear-gradient(to right, #8B0000 0%, #DC143C 30%, #FFA500 50%, #4CAF50 70%, #2E8B57 100%);
-        }
-
-        .result-box {
-            margin-top: 30px;
-            padding: 25px;
-            border-radius: 15px;
-            text-align: center;
-            transition: all 0.4s ease;
-            border: 3px solid #ddd;
-        }
-
-        .result-score {
-            font-size: 48px;
-            font-weight: 800;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .result-category {
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .result-description {
-            font-size: 14px;
-            line-height: 1.5;
-            margin-top: 10px;
-            padding: 10px;
-            background: rgba(255,255,255,0.5);
-            border-radius: 8px;
-        }
-
-        .result-excellent {
-            background: linear-gradient(135deg, #2E8B57 0%, #3CB371 100%);
-            color: white;
-            border-color: #2E8B57;
-            animation: pulse 1s ease-in-out;
-        }
-
-        .result-good {
-            background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
-            color: white;
-            border-color: #4CAF50;
-        }
-
-        .result-medium {
-            background: linear-gradient(135deg, #FFA500 0%, #FFB84D 100%);
-            color: white;
-            border-color: #FFA500;
-        }
-
-        .result-low {
-            background: linear-gradient(135deg, #DC143C 0%, #FF6B6B 100%);
-            color: white;
-            border-color: #DC143C;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        .breakdown {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 20px;
-            padding-top: 15px;
-            border-top: 2px dashed rgba(0,0,0,0.1);
-        }
-
-        .breakdown-item {
-            text-align: center;
-        }
-
-        .breakdown-label {
-            font-size: 11px;
-            color: rgba(0,0,0,0.6);
-            margin-bottom: 3px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .breakdown-value {
-            font-size: 18px;
-            font-weight: 700;
-        }
-
-        .buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        button {
-            flex: 1;
-            padding: 15px;
-            font-size: 16px;
-            font-weight: 600;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .btn-reset {
-            background: #95a5a6;
-            color: white;
-        }
-
-        .btn-reset:hover {
-            background: #7f8c8d;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        .btn-save {
-            background: #667eea;
-            color: white;
-        }
-
-        .btn-save:hover {
-            background: #5568d3;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-        }
-
-        .history {
-            margin-top: 25px;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 12px;
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-        }
-
-        .history.active {
-            max-height: 400px;
-            overflow-y: auto;
-        }
-
-        .history-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 10px;
-            color: #667eea;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .history-item {
-            padding: 10px;
-            margin-bottom: 8px;
-            background: white;
-            border-radius: 8px;
-            border-left: 4px solid #667eea;
-            font-size: 13px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .recommendations {
-            margin-top: 20px;
-            padding: 15px;
-            background: #fff3cd;
-            border-radius: 12px;
-            border: 2px solid #ffc107;
-        }
-
-        .recommendations-title {
-            font-size: 15px;
-            font-weight: 600;
-            color: #856404;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .recommendations-text {
-            font-size: 13px;
-            color: #856404;
-            line-height: 1.5;
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 20px;
-            padding-top: 15px;
-            border-top: 2px solid #e9ecef;
-            font-size: 12px;
-            color: #666;
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 15px;
-            }
-            
-            .header h1 {
-                font-size: 20px;
-            }
-            
-            .result-score {
-                font-size: 40px;
-            }
-            
-            .result-category {
-                font-size: 24px;
-            }
-        }
-    </style>
+footer{padding:4px 20px 0;font-size:11.5px;color:var(--ink-3);font-weight:500;line-height:1.6}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media print{.tabs,.hero,.btn,.row{display:none}}
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🐄 Калькулятор IIM</h1>
-            <p>Оценка качества молозива</p>
-            <p id="jsStatus" style="margin-top:8px;font-size:12px;color:#dc3545;font-weight:700;">JavaScript не запущен</p>
-        </div>
+<noscript>
+<div style="max-width:480px;margin:16px auto;padding:16px 18px;background:#FBE6E3;
+  color:#8A2E24;border-radius:14px;font-family:sans-serif;font-size:14px;
+  font-weight:600;line-height:1.5">
+  Калькулятор не работает: файл открыт без JavaScript — это бывает в режиме
+  быстрого просмотра. Откройте файл в браузере Safari: в приложении «Файлы»
+  нажмите и удерживайте файл → «Поделиться» → Safari.
+</div>
+</noscript>
+<div class="app">
 
-        <!-- Brix Slider -->
-        <div class="slider-group">
-            <div class="slider-label">
-                <span class="slider-name">Brix (%)</span>
-                <span class="slider-value brix" id="brixValue">22</span>
-            </div>
-            <input type="range" id="brixSlider" min="16" max="30" value="22" step="0.5">
-            <div class="slider-score">Баллы: <span id="brixScore">40</span> / 60</div>
-        </div>
+<header class="hero">
+  <div class="brand">
+    <div class="logo">
+      <svg width="34" height="34" viewBox="0 0 48 48" aria-hidden="true">
+        <path d="M8 15c-1.6-3.4-1.2-6.6-.2-7.3 1.3-.9 4.3.6 6.6 3.2" fill="#0E3B2B"/>
+        <path d="M40 15c1.6-3.4 1.2-6.6.2-7.3-1.3-.9-4.3.6-6.6 3.2" fill="#0E3B2B"/>
+        <path d="M24 9c8.2 0 14.4 5 14.4 12.2 0 4-1.4 7.2-3.6 9.6-2.4 2.6-6.2 4-10.8 4s-8.4-1.4-10.8-4c-2.2-2.4-3.6-5.6-3.6-9.6C9.6 14 15.8 9 24 9Z" fill="#166B4A"/>
+        <path d="M15.4 12.6c2.4-.6 4.2 1.4 3.6 3.8-.5 2-2.6 3.2-4.4 2.2-1.9-1-2-4.6.8-6Z" fill="#0E3B2B"/>
+        <path d="M33.6 22.2c1.9.5 2.6 2.6 1.6 4.2-.9 1.4-3 1.6-4 .2-1.1-1.5-.3-4 2.4-4.4Z" fill="#0E3B2B"/>
+        <path d="M16.5 27.5c0-2.5 3.4-4 7.5-4s7.5 1.5 7.5 4c0 3.2-3.4 5.5-7.5 5.5s-7.5-2.3-7.5-5.5Z" fill="#F6C9B4"/>
+        <circle cx="21" cy="27.6" r="1.35" fill="#0E3B2B"/>
+        <circle cx="27" cy="27.6" r="1.35" fill="#0E3B2B"/>
+        <circle cx="18.6" cy="20.4" r="1.7" fill="#fff"/>
+        <circle cx="29.4" cy="20.4" r="1.7" fill="#fff"/>
+        <path d="M24 36c2.6 2.9 4 5 4 6.6a4 4 0 0 1-8 0c0-1.6 1.4-3.7 4-6.6Z" fill="#F2A413"/>
+      </svg>
+    </div>
+    <div>
+      <h1>Оценка молозива</h1>
+      <p>IIM-Lite · Brix 60 · белок 25 · плотность 15</p>
+    </div>
+  </div>
+</header>
 
-        <!-- Protein Slider -->
-        <div class="slider-group">
-            <div class="slider-label">
-                <span class="slider-name">Белок (г/дл)</span>
-                <span class="slider-value protein" id="proteinValue">6.0</span>
-            </div>
-            <input type="range" id="proteinSlider" min="3.5" max="9.0" value="6.0" step="0.1">
-            <div class="slider-score">Баллы: <span id="proteinScore">20</span> / 25</div>
-        </div>
+<div class="tabs" role="tablist">
+  <button role="tab" id="tab-calc" aria-controls="page-calc" aria-selected="true">Оценка</button>
+  <button role="tab" id="tab-jrn" aria-controls="page-jrn" aria-selected="false">Журнал</button>
+</div>
 
-        <!-- Density Slider -->
-        <div class="slider-group">
-            <div class="slider-label">
-                <span class="slider-name">Плотность</span>
-                <span class="slider-value density" id="densityValue">60</span>
-            </div>
-            <input type="range" id="densitySlider" min="30" max="85" value="60" step="1">
-            <div class="slider-score">Баллы: <span id="densityScore">7</span> / 10</div>
-        </div>
+<main>
 
-        <!-- Result -->
-        <div class="result-box" id="resultBox">
-            <div class="result-score" id="totalScore">67</div>
-            <div class="result-category" id="category">ХОРОШЕЕ</div>
-            <div class="result-description" id="description">
-                Молозиво хорошего качества. Подходит для кормления телят.
-            </div>
-            <div class="breakdown">
-                <div class="breakdown-item">
-                    <div class="breakdown-label">Brix</div>
-                    <div class="breakdown-value" id="brixBreakdown">40б</div>
-                </div>
-                <div class="breakdown-item">
-                    <div class="breakdown-label">Белок</div>
-                    <div class="breakdown-value" id="proteinBreakdown">20б</div>
-                </div>
-                <div class="breakdown-item">
-                    <div class="breakdown-label">Плотн.</div>
-                    <div class="breakdown-value" id="densityBreakdown">7б</div>
-                </div>
-            </div>
-        </div>
+<!-- ================= CALC ================= -->
+<section class="page" id="page-calc" role="tabpanel" aria-labelledby="tab-calc">
 
-        <!-- Recommendations -->
-        <div class="recommendations" id="recommendations">
-            <div class="recommendations-title">
-                💡 Рекомендация
-            </div>
-            <div class="recommendations-text" id="recommendationText">
-                Используйте в первые 12 часов жизни телёнка.
-            </div>
-        </div>
+  <div class="card gauge-card" aria-live="polite">
+    <div class="ring">
+      <svg width="190" height="190" viewBox="0 0 190 190">
+        <circle cx="95" cy="95" r="80" fill="none" stroke="#E7EFEA" stroke-width="16"/>
+        <circle id="arc" cx="95" cy="95" r="80" fill="none" stroke="#1E9A66" stroke-width="16"
+          stroke-linecap="round" stroke-dasharray="502.65" stroke-dashoffset="502.65"
+          style="transition:stroke-dashoffset .35s cubic-bezier(.4,0,.2,1),stroke .25s"/>
+      </svg>
+      <div class="ring-mid">
+        <div class="ring-num" id="score">0</div>
+        <div class="ring-max">из 100 баллов</div>
+      </div>
+    </div>
+    <div class="badge" id="badge">—</div>
+    <div class="advice" id="advice"></div>
+    <div class="legend">
+      <div class="lg-low"><b>0–39</b>низкое</div>
+      <div class="lg-mid"><b>40–65</b>среднее</div>
+      <div class="lg-high"><b>66–100</b>высокое</div>
+    </div>
+  </div>
 
-        <!-- Buttons -->
-        <div class="buttons">
-            <button class="btn-reset" onclick="resetValues()">Сбросить</button>
-            <button class="btn-save" onclick="saveToHistory()">Сохранить</button>
-        </div>
+  <div class="note hidden" id="note">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#B8860B" stroke-width="2.4" stroke-linecap="round"><path d="M12 8v5"/><path d="M12 17h.01"/><circle cx="12" cy="12" r="9.5"/></svg>
+    <span id="note-txt"></span>
+  </div>
 
-        <!-- History -->
-        <div class="history" id="history">
-            <div class="history-title" onclick="toggleHistory()">
-                История измерений <span id="historyToggle">▼</span>
-            </div>
-            <div id="historyList"></div>
-        </div>
+  <div class="card">
+    <h2>Измерения</h2>
 
-        <div class="footer">
-            © 2024 Калькулятор IIM | Версия 1.0
+    <div class="f">
+      <div class="f-top">
+        <div class="f-ic" style="background:#FDEFD2">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#B8860B" stroke-width="2.3" stroke-linecap="round"><path d="M12 3v13"/><circle cx="12" cy="19" r="2.5"/><path d="M8 7h8"/></svg>
         </div>
+        <div><div class="f-nm">Brix</div><div class="f-sub">рефрактометр</div></div>
+        <div class="f-pt" id="bpts">0 / 60</div>
+      </div>
+      <div class="f-val"><span id="bval">24,0</span><u>%</u></div>
+      <input type="range" id="brix" min="12" max="34" step="0.5" value="24" aria-label="Brix, %">
+      <div class="marks"><span>12</span><span class="mk">18 брак</span><span class="mk">22 норма</span><span>34</span></div>
     </div>
 
-    <script>
-        // Получение элементов
-        const brixSlider = document.getElementById('brixSlider');
-        const proteinSlider = document.getElementById('proteinSlider');
-        const densitySlider = document.getElementById('densitySlider');
+    <div class="f">
+      <div class="f-top">
+        <div class="f-ic" style="background:#E7F4ED">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#166B4A" stroke-width="2.3" stroke-linecap="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v10M7.5 12h9"/></svg>
+        </div>
+        <div><div class="f-nm">Общий белок</div><div class="f-sub">лаборатория</div></div>
+        <div class="f-pt" id="ppts">0 / 25</div>
+      </div>
+      <div class="f-val"><span id="pval">6,50</span><u>%</u></div>
+      <input type="range" id="prot" min="3" max="10" step="0.05" value="6.5" aria-label="Общий белок, %">
+      <div class="marks"><span>3,0</span><span class="mk">4,5</span><span class="mk">7,5</span><span>10,0</span></div>
+    </div>
 
-        const brixValue = document.getElementById('brixValue');
-        const proteinValue = document.getElementById('proteinValue');
-        const densityValue = document.getElementById('densityValue');
+    <div class="f">
+      <div class="f-top">
+        <div class="f-ic" style="background:#E7F4ED">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#166B4A" stroke-width="2.3" stroke-linecap="round"><path d="M12 3s6 6.6 6 10.5A6 6 0 0 1 6 13.5C6 9.6 12 3 12 3Z"/></svg>
+        </div>
+        <div><div class="f-nm">Плотность</div><div class="f-sub">ареометр</div></div>
+        <div class="f-pt" id="dpts">0 / 15</div>
+      </div>
+      <div class="f-val"><span id="dval">61</span><u>°А</u></div>
+      <input type="range" id="dens" min="25" max="90" step="1" value="61" aria-label="Плотность">
+      <div class="marks"><span>25</span><span class="mk">35</span><span class="mk">75</span><span>90</span></div>
+    </div>
+  </div>
 
-        const brixScore = document.getElementById('brixScore');
-        const proteinScore = document.getElementById('proteinScore');
-        const densityScore = document.getElementById('densityScore');
+  <div class="card">
+    <h2>Паспорт пробы</h2>
+    <div class="grid">
+      <div>
+        <label class="lbl" for="cow">Номер коровы</label>
+        <input type="text" id="cow" placeholder="543548" inputmode="numeric" autocomplete="off">
+      </div>
+      <div>
+        <label class="lbl" for="date">Дата отбора</label>
+        <input type="date" id="date">
+      </div>
+    </div>
+    <div class="err" id="cow-err">Введите номер коровы</div>
+    <label class="lbl" style="margin-top:14px">Лактация</label>
+    <div class="chips" role="group" aria-label="Номер лактации">
+      <button type="button" data-p="1" aria-pressed="false">1-я</button>
+      <button type="button" data-p="2" aria-pressed="false">2-я</button>
+      <button type="button" data-p="3" aria-pressed="false">3-я и старше</button>
+    </div>
+    <div class="err" id="lact-err">Выберите лактацию</div>
+    <div class="row"><button class="btn" id="save">Записать в журнал</button></div>
+  </div>
 
-        const totalScore = document.getElementById('totalScore');
-        const category = document.getElementById('category');
-        const description = document.getElementById('description');
-        const resultBox = document.getElementById('resultBox');
+</section>
 
-        const brixBreakdown = document.getElementById('brixBreakdown');
-        const proteinBreakdown = document.getElementById('proteinBreakdown');
-        const densityBreakdown = document.getElementById('densityBreakdown');
+<!-- ================= JOURNAL ================= -->
+<section class="page" id="page-jrn" role="tabpanel" aria-labelledby="tab-jrn" hidden>
+  <div class="jhead"><h2>Журнал проб</h2><span id="count">0 записей</span></div>
+  <div id="list"></div>
+  <div class="empty" id="empty">
+    <svg width="52" height="52" viewBox="0 0 48 48" fill="none" stroke="#8EA69A" stroke-width="2.2" stroke-linecap="round"><rect x="9" y="7" width="30" height="34" rx="4"/><path d="M16 17h16M16 24h16M16 31h9"/></svg>
+    <p>Записей пока нет</p>
+  </div>
+  <div class="row">
+    <button class="btn ghost" id="csv" disabled>Выгрузить CSV</button>
+    <button class="btn ghost" id="print" disabled>Печать</button>
+  </div>
+  <footer><p>Журнал хранится только пока открыта вкладка. Выгрузите CSV перед закрытием, чтобы не потерять данные.</p></footer>
+</section>
 
-        const recommendationText = document.getElementById('recommendationText');
+</main>
+</div>
 
-        let historyData = [];
+<script>
+var parity=null, records=[];
+var C=502.65;
 
-        // Функции расчёта баллов
-        function calculateBrixScore(brix) {
-            if (brix >= 26) return 60;
-            if (brix >= 24) return 50;
-            if (brix >= 22) return 40;
-            if (brix >= 20) return 25;
-            if (brix >= 18) return 10;
-            return 0;
-        }
+function brixPts(x){ if(x<=18)return 0; if(x<=22)return 40*(x-18)/4; if(x<=28)return 40+20*(x-22)/6; return 60; }
+function protPts(x){ if(x<=4.5)return 0; if(x>=7.5)return 25; return 25*(x-4.5)/3; }
+function densPts(x){ if(x<=35)return 0; if(x>=75)return 15; return 15*(x-35)/40; }
+function f1(n){ return n.toFixed(1).replace('.',','); }
 
-        function calculateProteinScore(protein) {
-            if (protein >= 7.0) return 25;
-            if (protein >= 6.0) return 20 + Math.floor((protein - 6.0) * 5);
-            if (protein >= 5.0) return 15 + Math.floor((protein - 5.0) * 5);
-            if (protein >= 4.0) return 10 + Math.floor((protein - 4.0) * 5);
-            return 0;
-        }
+function cat(t){
+  if(t<40) return {n:'Низкое',bg:'#FBE6E3',fg:'#D9483B',
+    a:'Не выпаивать первой порцией — заменить молозивом из банка.'};
+  if(t<=65) return {n:'Среднее',bg:'#FDEFD2',fg:'#9A6403',
+    a:'Пригодно с увеличением объёма выпойки или с добавкой.'};
+  return {n:'Высокое',bg:'#E7F4ED',fg:'#166B4A',
+    a:'Первая выпойка новорождённому. Годно для банка молозива.'};
+}
+function vals(){return{
+  b:parseFloat(document.getElementById('brix').value),
+  p:parseFloat(document.getElementById('prot').value),
+  d:parseFloat(document.getElementById('dens').value)};}
 
-        function calculateDensityScore(density) {
-            if (density >= 70) return 10;
-            if (density >= 66) return 9;
-            if (density >= 62) return 8;
-            if (density >= 58) return 7;
-            if (density >= 54) return 6;
-            if (density >= 50) return 5;
-            if (density >= 46) return 4;
-            if (density >= 42) return 3;
-            if (density >= 38) return 2;
-            if (density >= 34) return 1;
-            return 0;
-        }
+function paintTrack(el,color){
+  var min=+el.min, max=+el.max, pct=((+el.value-min)/(max-min))*100;
+  el.style.setProperty('--trk','linear-gradient(90deg,'+color+' '+pct+'%,#E7EFEA '+pct+'%)');
+  el.style.setProperty('--thumb',color);
+}
 
-        function getCategoryInfo(total) {
-            if (total >= 80) {
-                return {
-                    name: 'ОТЛИЧНОЕ',
-                    class: 'result-excellent',
-                    desc: 'Молозиво высшего качества! Идеально для телят.',
-                    recommendation: 'Используйте в первые 6 часов жизни телёнка. Высокая концентрация иммуноглобулинов обеспечит отличный пассивный иммунитет.'
-                };
-            } else if (total >= 60) {
-                return {
-                    name: 'ХОРОШЕЕ',
-                    class: 'result-good',
-                    desc: 'Молозиво хорошего качества. Подходит для кормления телят.',
-                    recommendation: 'Используйте в первые 12 часов жизни телёнка. Обеспечит хороший иммунный ответ.'
-                };
-            } else if (total >= 40) {
-                return {
-                    name: 'СРЕДНЕЕ',
-                    class: 'result-medium',
-                    desc: 'Молозиво среднего качества. Можно использовать с ограничениями.',
-                    recommendation: 'Рекомендуется смешать с молозивом отличного качества. Увеличьте объём скармливания на 20-30%.'
-                };
-            } else {
-                return {
-                    name: 'НИЗКОЕ',
-                    class: 'result-low',
-                    desc: 'Качество недостаточное для надёжной защиты телёнка.',
-                    recommendation: '⚠️ НЕ рекомендуется использовать для телят. Найдите молозиво лучшего качества или используйте заменитель молозива.'
-                };
-            }
-        }
+function render(){
+  var v=vals(), bp=brixPts(v.b), pp=protPts(v.p), dp=densPts(v.d), t=bp+pp+dp;
 
-        function updateCalculation() {
-            const brix = parseFloat(brixSlider.value);
-            const protein = parseFloat(proteinSlider.value);
-            const density = parseFloat(densitySlider.value);
+  document.getElementById('bval').textContent=v.b.toFixed(1).replace('.',',');
+  document.getElementById('pval').textContent=v.p.toFixed(2).replace('.',',');
+  document.getElementById('dval').textContent=v.d.toFixed(0);
+  document.getElementById('bpts').textContent=f1(bp)+' / 60';
+  document.getElementById('ppts').textContent=f1(pp)+' / 25';
+  document.getElementById('dpts').textContent=f1(dp)+' / 15';
 
-            // Обновление отображаемых значений
-            brixValue.textContent = brix.toFixed(1);
-            proteinValue.textContent = protein.toFixed(1);
-            densityValue.textContent = density;
+  var c=cat(t);
+  document.getElementById('score').textContent=Math.round(t);
+  document.getElementById('arc').style.strokeDashoffset=C-(Math.min(t,100)/100)*C;
+  document.getElementById('arc').setAttribute('stroke',c.fg);
+  var bd=document.getElementById('badge');
+  bd.textContent=c.n; bd.style.background=c.bg; bd.style.color=c.fg;
+  document.getElementById('advice').textContent=c.a;
 
-            // Расчёт баллов
-            const brixPts = calculateBrixScore(brix);
-            const proteinPts = calculateProteinScore(protein);
-            const densityPts = calculateDensityScore(density);
-            const total = brixPts + proteinPts + densityPts;
+  paintTrack(document.getElementById('brix'),'#F2A413');
+  paintTrack(document.getElementById('prot'),'#1E9A66');
+  paintTrack(document.getElementById('dens'),'#1E9A66');
 
-            // Обновление баллов
-            brixScore.textContent = brixPts;
-            proteinScore.textContent = proteinPts;
-            densityScore.textContent = densityPts;
+  var msg='';
+  if(parity===2 && v.b>=18 && v.b<22){
+    msg='Пограничный Brix у коровы 2-й лактации. Молозиво второго отёла содержит наименьшее количество IgG — при возможности замените из банка.';
+  } else if(v.b<18){
+    msg='Brix ниже 18% — молозиво не проходит нижний клинический порог независимо от остальных показателей.';
+  } else if(t>0 && (pp+dp)/t>0.55){
+    msg='Больше половины баллов дали белок и плотность. Они во многом дублируют друг друга — перепроверьте рефрактометр.';
+  }
+  var nt=document.getElementById('note');
+  if(msg){document.getElementById('note-txt').textContent=msg;nt.classList.remove('hidden');}
+  else nt.classList.add('hidden');
+}
 
-            brixBreakdown.textContent = brixPts + 'б';
-            proteinBreakdown.textContent = proteinPts + 'б';
-            densityBreakdown.textContent = densityPts + 'б';
+function plural(n){
+  if(n%10===1&&n%100!==11)return 'запись';
+  if([2,3,4].indexOf(n%10)>-1&&[12,13,14].indexOf(n%100)===-1)return 'записи';
+  return 'записей';
+}
 
-            // Обновление итога
-            totalScore.textContent = total;
+function drawList(){
+  var L=document.getElementById('list'); L.innerHTML='';
+  records.forEach(function(r,i){
+    var c=cat(r.total), el=document.createElement('div');
+    el.className='rec';
+    el.innerHTML=
+      '<div class="rec-score" style="background:'+c.bg+';color:'+c.fg+'">'+Math.round(r.total)+'</div>'+
+      '<div class="rec-main"><div class="rec-cow">№ '+r.cow+'</div>'+
+      '<div class="rec-meta">'+r.date+' · лактация '+r.lact+' · '+c.n.toLowerCase()+'</div>'+
+      '<div class="rec-vals">Brix '+f1(r.b)+'% · белок '+r.p.toFixed(2).replace('.',',')+'% · плотн. '+r.d+'</div></div>'+
+      '<button class="rec-del" data-i="'+i+'" aria-label="Удалить запись">&times;</button>';
+    L.appendChild(el);
+  });
+  document.getElementById('empty').style.display=records.length?'none':'block';
+  document.getElementById('count').textContent=records.length+' '+plural(records.length);
+  document.getElementById('csv').disabled=!records.length;
+  document.getElementById('print').disabled=!records.length;
+  L.querySelectorAll('.rec-del').forEach(function(b){
+    b.addEventListener('click',function(){records.splice(+b.dataset.i,1);drawList();});
+  });
+}
 
-            // Получение категории
-            const info = getCategoryInfo(total);
-            category.textContent = info.name;
-            description.textContent = info.desc;
-            recommendationText.textContent = info.recommendation;
+document.getElementById('save').addEventListener('click',function(){
+  var cow=document.getElementById('cow').value.trim(), ok=true;
+  document.getElementById('cow-err').classList.toggle('on',!cow); if(!cow)ok=false;
+  document.getElementById('lact-err').classList.toggle('on',parity===null); if(parity===null)ok=false;
+  if(!ok)return;
+  var v=vals(), t=brixPts(v.b)+protPts(v.p)+densPts(v.d);
+  var dv=document.getElementById('date').value;
+  records.unshift({cow:cow,date:dv?dv.split('-').reverse().join('.'):'—',
+    lact:(parity===3?'3+':String(parity)),b:v.b,p:v.p,d:v.d,total:t});
+  document.getElementById('cow').value='';
+  drawList(); switchTab('jrn');
+});
 
-            // Обновление класса
-            resultBox.className = 'result-box ' + info.class;
-        }
+document.getElementById('cow').addEventListener('input',function(){
+  if(this.value.trim())document.getElementById('cow-err').classList.remove('on');
+});
 
-        function resetValues() {
-            brixSlider.value = 22;
-            proteinSlider.value = 6.0;
-            densitySlider.value = 60;
-            updateCalculation();
-        }
+function buildCsv(){
+  var rows=[['Номер коровы','Дата','Лактация','Brix %','Белок %','Плотность','Балл','Оценка']];
+  records.forEach(function(r){rows.push([r.cow,r.date,r.lact,f1(r.b),
+    r.p.toFixed(2).replace('.',','),r.d,Math.round(r.total),cat(r.total).n]);});
+  return '\uFEFF'+rows.map(function(x){return x.join(';');}).join('\r\n');
+}
 
-        function saveToHistory() {
-            const timestamp = new Date().toLocaleString('ru-RU');
-            const brix = parseFloat(brixSlider.value);
-            const protein = parseFloat(proteinSlider.value);
-            const density = parseFloat(densitySlider.value);
-            const total = parseInt(totalScore.textContent);
-            const cat = category.textContent;
+document.getElementById('csv').addEventListener('click',function(){
+  var text=buildCsv(), name='IIM-Lite_журнал.csv';
+  var blob=new Blob([text],{type:'text/csv;charset=utf-8'});
 
-            const entry = {
-                timestamp,
-                brix,
-                protein,
-                density,
-                total,
-                category: cat
-            };
+  // iPhone/iPad: системное окно «Поделиться» — сохранить в Файлы, почту, мессенджер
+  if(navigator.canShare){
+    try{
+      var file=new File([blob],name,{type:'text/csv'});
+      if(navigator.canShare({files:[file]})){
+        navigator.share({files:[file],title:'Журнал оценки молозива'})
+          .catch(function(){});
+        return;
+      }
+    }catch(e){}
+  }
 
-            historyData.unshift(entry);
-            if (historyData.length > 10) historyData.pop();
+  // Обычные браузеры: скачивание файлом
+  var a=document.createElement('a'), url=URL.createObjectURL(blob);
+  a.href=url; a.download=name; document.body.appendChild(a); a.click();
+  document.body.removeChild(a);
+  setTimeout(function(){URL.revokeObjectURL(url);},1500);
+});
+document.getElementById('print').addEventListener('click',function(){window.print();});
 
-            updateHistoryDisplay();
-            
-            // Показать уведомление
-            alert('✅ Сохранено в историю!');
-        }
+document.querySelectorAll('.chips button').forEach(function(b){
+  b.addEventListener('click',function(){
+    var val=+b.dataset.p; parity=(parity===val)?null:val;
+    document.querySelectorAll('.chips button').forEach(function(x){
+      x.setAttribute('aria-pressed',+x.dataset.p===parity?'true':'false');});
+    if(parity!==null)document.getElementById('lact-err').classList.remove('on');
+    render();
+  });
+});
 
-        function updateHistoryDisplay() {
-            const historyList = document.getElementById('historyList');
-            if (historyData.length === 0) {
-                historyList.innerHTML = '<div style="text-align:center;color:#999;padding:10px;">История пуста</div>';
-                return;
-            }
+['brix','prot','dens'].forEach(function(id){
+  document.getElementById(id).addEventListener('input',render);
+});
 
-            historyList.innerHTML = historyData.map((entry, index) => `
-                <div class="history-item">
-                    <div>
-                        <strong>${entry.total} б - ${entry.category}</strong><br>
-                        <small>Brix: ${entry.brix}% | Белок: ${entry.protein} | Плотн: ${entry.density}</small><br>
-                        <small style="color:#999;">${entry.timestamp}</small>
-                    </div>
-                    <button onclick="deleteHistoryItem(${index})" style="background:#dc3545;color:white;border:none;padding:5px 10px;border-radius:5px;cursor:pointer;font-size:12px;">✕</button>
-                </div>
-            `).join('');
-        }
+function switchTab(k){
+  var calc=k==='calc';
+  document.getElementById('page-calc').hidden=!calc;
+  document.getElementById('page-jrn').hidden=calc;
+  document.getElementById('tab-calc').setAttribute('aria-selected',calc?'true':'false');
+  document.getElementById('tab-jrn').setAttribute('aria-selected',calc?'false':'true');
+  window.scrollTo(0,0);
+}
+document.getElementById('tab-calc').addEventListener('click',function(){switchTab('calc');});
+document.getElementById('tab-jrn').addEventListener('click',function(){switchTab('jrn');});
 
-        function deleteHistoryItem(index) {
-            historyData.splice(index, 1);
-            updateHistoryDisplay();
-        }
-
-        function toggleHistory() {
-            const historyDiv = document.getElementById('history');
-            const toggle = document.getElementById('historyToggle');
-            historyDiv.classList.toggle('active');
-            toggle.textContent = historyDiv.classList.contains('active') ? '▲' : '▼';
-        }
-
-        // События изменения слайдеров. Работает в Safari/iPhone после открытия через сайт.
-        [brixSlider, proteinSlider, densitySlider].forEach(function(slider) {
-            slider.addEventListener('input', updateCalculation);
-            slider.addEventListener('change', updateCalculation);
-            slider.addEventListener('touchend', function() {
-                setTimeout(updateCalculation, 50);
-            });
-        });
-
-        // Начальный расчёт
-        updateCalculation();
-
-        const jsStatus = document.getElementById('jsStatus');
-        if (jsStatus) {
-            jsStatus.textContent = 'JavaScript работает';
-            jsStatus.style.color = '#28a745';
-        }
-    </script>
+document.getElementById('date').value=new Date().toISOString().slice(0,10);
+render(); drawList();
+</script>
 </body>
 </html>
